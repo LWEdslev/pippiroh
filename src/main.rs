@@ -25,18 +25,14 @@ struct Args {
 
 #[derive(Parser, Debug)]
 enum Command {
-    /// Open a chat room for a topic and print a ticket for others to join.
     Open,
-    /// Join a chat room from a ticket.
     Join {
-        /// The ticket, as base32 string.
         ticket: String,
     },
 }
 
-#[actix_rt::main]
+#[actix::main]
 async fn main() -> anyhow::Result<()> {
-    //let system = actix::prelude::System::new();
     let args = Args::parse();
 
     let (topic, nodes) = match &args.command {
@@ -51,9 +47,6 @@ async fn main() -> anyhow::Result<()> {
             (topic, nodes)
         }
     };
-    // Create Actix system manually for multi-threaded runtime
-
-    //let execution = async move {
     let endpoint = Endpoint::builder().discovery_n0().bind().await.unwrap();
     let gossip = Gossip::builder().spawn(endpoint.clone());
     let router = Router::builder(endpoint.clone())
@@ -70,9 +63,7 @@ async fn main() -> anyhow::Result<()> {
     let p2p = P2PActor::new().start();
     P2PActor::start_listener(
         p2p.clone(),
-        endpoint.clone(),
         gossip,
-        router.clone(),
         topic,
         nodes,
     )
@@ -155,9 +146,7 @@ impl P2PActor {
 
     async fn start_listener(
         addr: Addr<Self>,
-        endpoint: Endpoint,
         gossip: Gossip,
-        router: Router,
         topic: TopicId,
         nodes: Vec<NodeAddr>,
     ) {
@@ -221,7 +210,7 @@ impl Handler<GotMessage> for P2PActor {
     fn handle(&mut self, msg: GotMessage, _: &mut Self::Context) -> Self::Result {
         self.subscribers
             .iter()
-            .for_each(|s| s.do_send(msg.clone()).unwrap());
+            .for_each(|s| s.do_send(msg.clone()));
     }
 }
 
