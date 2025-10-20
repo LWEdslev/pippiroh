@@ -131,6 +131,7 @@ pub const BINCODE_CONFIG: bincode::config::Configuration = bincode::config::stan
 pub struct P2PTicket {
     pub topic: TopicId,
     pub nodes: Vec<NodeAddr>,
+    pub bootstrap_node: NodeAddr,
 }
 
 impl P2PTicket {

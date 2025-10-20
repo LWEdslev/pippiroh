@@ -12,7 +12,6 @@ clap = { version = "4.5.49", features = ["derive"] }
 data-encoding = "2.9.0"
 futures-lite = "2.6.1"
 iroh = "0.93.2"
-iroh-blobs = "0.95.0"
 iroh-gossip = "0.93.1"
 rand = "0.9.2"
 serde = { version = "1.0.228", features = ["derive"] }

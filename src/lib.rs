@@ -8,3 +8,9 @@ pub struct MessageBody {
     pub from: Option<NodeId>,
     pub text: String,
 }
+
+impl MessageBody {
+    pub fn log(&self) {
+        println!("\"{}\" from {:?}", self.text, self.from);
+    }
+}
